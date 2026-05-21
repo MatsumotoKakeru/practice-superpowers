@@ -137,8 +137,13 @@ def perform_create(self, serializer):
     serializer.save(owner=owner)
 ```
 
+## ページネーション
+
+バックエンドは `PAGE_SIZE=10` のページネーションが有効。今回は1ページ目（最大10件）のみ表示し、ページネーションUIは実装しない。
+
 ## UIルール
 
 - 全ラベル・エラーメッセージ・ボタンテキストは日本語
 - ローディング中はボタンを無効化
 - エラーはフォーム各フィールド直下に表示
+- `language` のデフォルト値: `python`、`style` のデフォルト値: `monokai`
