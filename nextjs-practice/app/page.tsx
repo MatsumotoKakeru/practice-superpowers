@@ -1,65 +1,71 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import Link from 'next/link'
+import { useSnippets } from '@/hooks/useSnippets'
+import { useDeleteSnippet } from '@/hooks/useDeleteSnippet'
+
+export default function HomePage() {
+  const { snippets, isLoading, error } = useSnippets()
+  const { remove, isLoading: isDeleting } = useDeleteSnippet()
+
+  if (isLoading) return <p className="p-8 text-gray-500">読み込み中...</p>
+  if (error) return <p className="p-8 text-red-500">データの取得に失敗しました</p>
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="max-w-4xl mx-auto p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">スニペット一覧</h1>
+        <Link
+          href="/snippets/new"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          新規作成
+        </Link>
+      </div>
+
+      {snippets.length === 0 ? (
+        <p className="text-gray-500">スニペットがありません</p>
+      ) : (
+        <table className="w-full border-collapse border border-gray-200">
+          <thead>
+            <tr className="bg-gray-50">
+              <th className="text-left p-3 border border-gray-200">タイトル</th>
+              <th className="text-left p-3 border border-gray-200">言語</th>
+              <th className="p-3 border border-gray-200">編集</th>
+              <th className="p-3 border border-gray-200">削除</th>
+            </tr>
+          </thead>
+          <tbody>
+            {snippets.map((snippet) => (
+              <tr key={snippet.id} className="hover:bg-gray-50">
+                <td className="p-3 border border-gray-200">{snippet.title}</td>
+                <td className="p-3 border border-gray-200">
+                  <span className="bg-blue-100 text-blue-800 text-sm px-2 py-0.5 rounded-full">
+                    {snippet.language}
+                  </span>
+                </td>
+                <td className="p-3 border border-gray-200 text-center">
+                  <Link
+                    href={`/snippets/${snippet.id}/edit`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    編集
+                  </Link>
+                </td>
+                <td className="p-3 border border-gray-200 text-center">
+                  <button
+                    onClick={() => remove(snippet.id)}
+                    disabled={isDeleting}
+                    className="text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    削除
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
-  );
+  )
 }
