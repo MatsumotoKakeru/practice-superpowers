@@ -54,7 +54,11 @@ export default function HomePage() {
                 </td>
                 <td className="p-3 border border-gray-200 text-center">
                   <button
-                    onClick={() => remove(snippet.id)}
+                    onClick={() => {
+                      if (window.confirm('このスニペットを削除しますか？')) {
+                        remove(snippet.id)
+                      }
+                    }}
                     disabled={isDeleting}
                     className="text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
                   >

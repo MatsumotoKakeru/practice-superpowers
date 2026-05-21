@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation'
 import EditSnippetForm from './EditSnippetForm'
 
 export default async function EditPage({
@@ -6,5 +7,7 @@ export default async function EditPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  return <EditSnippetForm snippetId={Number(id)} />
+  const snippetId = Number(id)
+  if (isNaN(snippetId)) notFound()
+  return <EditSnippetForm snippetId={snippetId} />
 }
