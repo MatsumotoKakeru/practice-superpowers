@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    container_name: drf-tutorial
+    ports:
+      - "8000:8000"
+    volumes:
+      # ホストのカレントディレクトリ(=このフォルダ)をコンテナの /app にマウント
+      # Windowsでも問題なく動作する書き方
+      - .:/app
+    stdin_open: true
+    tty: true
+    # 初回 manage.py が無い状態でも落ちないように sleep にする選択肢もあるが、
+    # チュートリアル開始時は `docker compose run` で startproject する想定。
+    # 通常起動時は runserver が立ち上がる。
+    command: python manage.py runserver 0.0.0.0:8000
