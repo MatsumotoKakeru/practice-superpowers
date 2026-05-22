@@ -16,3 +16,8 @@ export type PaginatedResponse<T> = {
   previous: string | null
   results: T[]
 }
+
+export type SnippetChoices = {
+  languages: { value: string; label: string }[]
+  styles: string[]
+}

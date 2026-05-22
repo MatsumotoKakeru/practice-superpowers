@@ -1,31 +1,36 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { snippetSchema, type SnippetFormInput } from '@/schemas/snippet'
 import { useSnippet } from '@/hooks/useSnippet'
 import { useUpdateSnippet } from '@/hooks/useUpdateSnippet'
+import { useSnippetChoices } from '@/hooks/useSnippetChoices'
 
 export default function EditSnippetForm({ snippetId }: { snippetId: number }) {
   const router = useRouter()
   const { snippet, isLoading: isFetching, error: fetchError } = useSnippet(snippetId)
   const { update, isLoading: isUpdating, error: apiError } = useUpdateSnippet()
+  const { languages, styles, isLoading: choicesLoading } = useSnippetChoices()
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    control,
+    trigger,
+    formState: { errors, isValid },
   } = useForm<SnippetFormInput>({
     resolver: zodResolver(snippetSchema),
+    mode: 'onChange',
     defaultValues: {
       title: '',
       code: '',
       language: 'python',
-      style: 'monokai',
+      style: 'friendly',
       linenos: false,
     },
   })
@@ -39,13 +44,17 @@ export default function EditSnippetForm({ snippetId }: { snippetId: number }) {
         style: snippet.style,
         linenos: snippet.linenos,
       })
+      trigger()
     }
-  }, [snippet, reset])
+  }, [snippet, reset, trigger])
 
-  const onSubmit = async (data: SnippetFormInput) => {
-    const success = await update(snippetId, data)
-    if (success) router.push('/')
-  }
+  const onSubmit = useCallback(
+    async (data: SnippetFormInput) => {
+      const success = await update(snippetId, data)
+      if (success) router.push('/')
+    },
+    [update, snippetId, router],
+  )
 
   if (isFetching) return <p className="p-8 text-gray-500">読み込み中...</p>
   if (fetchError) return <p className="p-8 text-red-500">スニペットの取得に失敗しました</p>
@@ -68,7 +77,7 @@ export default function EditSnippetForm({ snippetId }: { snippetId: number }) {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            タイトル <span className="text-red-500">*</span>
+            タイトル
           </label>
           <input
             {...register('title')}
@@ -84,9 +93,26 @@ export default function EditSnippetForm({ snippetId }: { snippetId: number }) {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               言語 <span className="text-red-500">*</span>
             </label>
-            <input
-              {...register('language')}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <Controller
+              control={control}
+              name="language"
+              render={({ field }) => (
+                <select
+                  {...field}
+                  disabled={choicesLoading}
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                >
+                  {choicesLoading ? (
+                    <option value={field.value}>{field.value}</option>
+                  ) : (
+                    languages.map((lang) => (
+                      <option key={lang.value} value={lang.value}>
+                        {lang.label}
+                      </option>
+                    ))
+                  )}
+                </select>
+              )}
             />
             {errors.language && (
               <p className="mt-1 text-sm text-red-500">{errors.language.message}</p>
@@ -97,9 +123,26 @@ export default function EditSnippetForm({ snippetId }: { snippetId: number }) {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               スタイル <span className="text-red-500">*</span>
             </label>
-            <input
-              {...register('style')}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <Controller
+              control={control}
+              name="style"
+              render={({ field }) => (
+                <select
+                  {...field}
+                  disabled={choicesLoading}
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                >
+                  {choicesLoading ? (
+                    <option value={field.value}>{field.value}</option>
+                  ) : (
+                    styles.map((style) => (
+                      <option key={style} value={style}>
+                        {style}
+                      </option>
+                    ))
+                  )}
+                </select>
+              )}
             />
             {errors.style && (
               <p className="mt-1 text-sm text-red-500">{errors.style.message}</p>
@@ -135,7 +178,7 @@ export default function EditSnippetForm({ snippetId }: { snippetId: number }) {
 
         <button
           type="submit"
-          disabled={isUpdating}
+          disabled={!isValid || isUpdating || choicesLoading}
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isUpdating ? '保存中...' : '保存'}

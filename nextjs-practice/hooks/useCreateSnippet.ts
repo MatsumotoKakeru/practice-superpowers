@@ -13,7 +13,9 @@ export function useCreateSnippet() {
     setError(null)
     try {
       await createSnippet(data)
-      await mutate(SNIPPETS_KEY)
+      await mutate(
+        (key: unknown) => typeof key === 'string' && key.startsWith(SNIPPETS_KEY),
+      )
       return true
     } catch (e) {
       setError(e instanceof Error ? e.message : '作成に失敗しました')

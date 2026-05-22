@@ -1,4 +1,4 @@
-import type { PaginatedResponse, Snippet } from '@/types'
+import type { PaginatedResponse, Snippet, SnippetChoices } from '@/types'
 import type { SnippetFormInput } from '@/schemas/snippet'
 
 export const API_BASE = 'http://localhost:8000'
@@ -14,8 +14,8 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return res.json() as Promise<T>
 }
 
-export async function fetchSnippets(): Promise<PaginatedResponse<Snippet>> {
-  const res = await fetch(`${API_BASE}/snippets/`)
+export async function fetchSnippets(page: number = 1): Promise<PaginatedResponse<Snippet>> {
+  const res = await fetch(`${API_BASE}/snippets/?page=${page}`)
   return handleResponse(res)
 }
 
@@ -39,6 +39,11 @@ export async function updateSnippet(id: number, data: SnippetFormInput): Promise
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   })
+  return handleResponse(res)
+}
+
+export async function fetchChoices(): Promise<SnippetChoices> {
+  const res = await fetch(`${API_BASE}/choices/`)
   return handleResponse(res)
 }
 

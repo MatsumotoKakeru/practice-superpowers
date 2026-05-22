@@ -14,7 +14,9 @@ export function useUpdateSnippet() {
     setError(null)
     try {
       await updateSnippet(id, data)
-      await mutate(SNIPPETS_KEY)
+      await mutate(
+        (key: unknown) => typeof key === 'string' && key.startsWith(SNIPPETS_KEY),
+      )
       await mutate(snippetKey(id))
       return true
     } catch (e) {
