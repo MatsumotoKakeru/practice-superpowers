@@ -541,6 +541,8 @@ Run pressure scenario with subagent WITHOUT the skill. Document exact behavior:
 - What rationalizations did they use (verbatim)?
 - Which pressures triggered violations?
 
+**Save output:** Write the subagent's full response to `docs/superpowers/skill-tests/YYYY-MM-DD-<skill-name>-red.md`.
+
 This is "watch the test fail" - you must see what agents naturally do before writing the skill.
 
 ### GREEN: Write Minimal Skill
@@ -549,9 +551,13 @@ Write skill that addresses those specific rationalizations. Don't add extra cont
 
 Run same scenarios WITH skill. Agent should now comply.
 
+**Save output:** Write the subagent's full response to `docs/superpowers/skill-tests/YYYY-MM-DD-<skill-name>-green.md`.
+
 ### REFACTOR: Close Loopholes
 
 Agent found new rationalization? Add explicit counter. Re-test until bulletproof.
+
+**Save output:** Append each refactor test result to `docs/superpowers/skill-tests/YYYY-MM-DD-<skill-name>-refactor.md`.
 
 **Testing methodology:** See @testing-skills-with-subagents.md for the complete testing methodology:
 - How to write pressure scenarios
