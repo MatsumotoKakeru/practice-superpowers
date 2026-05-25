@@ -7,7 +7,7 @@ description: Use when asked to save the current session's conversation, or after
 
 ## Overview
 
-現在のセッションのやり取りを要約して `docs/chat-logs/` に保存する。
+現在のセッションのやり取りを全文 `docs/chat-logs/` に保存する。
 
 ## いつ使うか
 
@@ -32,7 +32,7 @@ description: Use when asked to save the current session's conversation, or after
 
 **ユーザー:** 発言内容
 
-**Claude:** 対応内容（長い場合は要約）
+**Claude:** 対応内容（全文）
 
 ---
 
@@ -44,7 +44,15 @@ description: Use when asked to save the current session's conversation, or after
 ## 書き方のルール
 
 - **ユーザー発言**: 原文のまま記載する
-- **Claude の応答**: 長い場合は要点のみ要約する。何を調べて何をしたかが伝わる粒度でよい
+- **Claude の応答**: 一字一句そのまま転写する。長くてもカットしない
 - やり取りの区切りは `---` を使う
 - テーマ名はファイル名にも使うため、日本語でよいが記号は避ける
 - ファイルが既に存在する場合は追記する（同じ日に複数セッションがある場合）
+
+## 禁止事項
+
+- 要約・省略・言い換えは一切しない
+- 「長いから短くした」「要点だけ残した」は違反
+- 箇条書きへの変換も禁止（元の文章をそのまま出す）
+
+「長い → 要約したい」と思ったら、それが禁止パターンです。全文を出してください。
