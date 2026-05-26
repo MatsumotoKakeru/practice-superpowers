@@ -12,6 +12,7 @@ description: Use when asked to save the current session's conversation, or after
 ## いつ使うか
 
 - ユーザーが `/save-chat-log` を実行したとき
+- `/clear` を実行する **前**（`/clear` はフックで傍受できないため、必ず手動で先に実行する）
 - `finishing-a-development-branch` スキルの完了後（そのスキルから呼び出される）
 
 ## 手順
@@ -22,6 +23,7 @@ description: Use when asked to save the current session's conversation, or after
 4. `docs/chat-logs/YYYY-MM-DD-テーマ.md` にファイルを作成する
 5. セッション内の全やり取りを以下のフォーマットで書き出す
 6. ファイルをコミットする
+7. 「ログを保存しました。`/clear` を実行してコンテキストをクリアできます。」とユーザーに伝える
 
 ## フォーマット
 

@@ -26,7 +26,19 @@
       "Bash(node -e \"const pkg = require\\('./node_modules/@hookform/resolvers/package.json'\\); console.log\\(pkg.version\\)\")",
       "Bash(node -e \"const pkg = require\\('./node_modules/react-hook-form/package.json'\\); console.log\\(pkg.version\\)\")",
       "Bash(node -e ' *)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(New-Item -ItemType Directory -Force -Path \"docs/superpowers/skill-tests\")",
+      "Bash(Out-Null)",
+      "PowerShell(ls \"$env:USERPROFILE\\\\.claude\\\\\")",
+      "PowerShell(ls \"$env:USERPROFILE\\\\.claude\\\\sessions\\\\\" | Select-Object -First 10)",
+      "PowerShell(ls \"$env:USERPROFILE\\\\.claude\\\\projects\\\\\")",
+      "PowerShell(ls \"$env:USERPROFILE\\\\.claude\\\\projects\\\\C--dev-practice-superpowers\\\\\")",
+      "PowerShell(Get-Content *)",
+      "Bash(git -C \"C:\\\\dev\\\\practice-superpowers\" add \"docs/chat-logs/2026-05-25-save-chat-logスキルの作成.md\")",
+      "Bash(git -C 'C:\\\\dev\\\\practice-superpowers' commit -m ' *)",
+      "Skill(update-config)",
+      "PowerShell(jq *)",
+        "WebFetch(domain:docs.anthropic.com)"
     ]
   }
 }
