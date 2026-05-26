@@ -559,6 +559,56 @@ Agent found new rationalization? Add explicit counter. Re-test until bulletproof
 - Plugging holes systematically
 - Meta-testing techniques
 
+## Test Result Documentation
+
+**REQUIRED:** Save test results after EVERY phase (RED, GREEN, REFACTOR).
+
+### Save Location
+
+```
+docs/superpowers/skill-tests/{YYYY-MM-DD}-{skill-name}/
+  {YYYY-MM-DD}-{skill-name}-red.md          # RED phase result
+  {YYYY-MM-DD}-{skill-name}-green.md        # GREEN phase result
+  {YYYY-MM-DD}-{skill-name}-green-v2.md     # If GREEN needed iteration
+  {YYYY-MM-DD}-{skill-name}-refactor.md     # REFACTOR phase result
+  {YYYY-MM-DD}-{skill-name}-refactor2.md    # If REFACTOR needed iteration
+  {any-file-generated-during-testing}       # e.g. project-rules.md
+```
+
+Date = today's date at time of testing. Use the same date for all files in one session.
+
+### File Format
+
+```markdown
+# {RED/GREEN/REFACTOR} テスト — {skill-name} {brief description of what was tested}
+
+**日時:** {YYYY-MM-DD}
+**対象スキル:** {skill-name}（新規作成 or {what was changed}）
+**変更内容:** {specific change tested, e.g. "画面設計書フォーマットの追加"}
+**フェーズ:** {RED/GREEN/REFACTOR}（{description, e.g. "スキル作成前のベースライン"}）
+
+---
+
+## シナリオ
+
+{What scenario was given to the subagent}
+
+## サブエージェントの出力（要約）
+
+{What the subagent actually did/produced}
+
+## 判定
+
+**{PASS / PARTIAL PASS / FAIL}** — {reason}
+
+- ✅ {what worked}
+- ❌ {what failed}
+```
+
+### Generated Files
+
+If the test produces output files (e.g., the subagent writes to `docs/rules/project-rules.md`), copy those files into the same test folder alongside the result file.
+
 ## Anti-Patterns
 
 ### ❌ Narrative Example
@@ -601,6 +651,8 @@ Deploying untested skills = deploying untested code. It's a violation of quality
 - [ ] Create pressure scenarios (3+ combined pressures for discipline skills)
 - [ ] Run scenarios WITHOUT skill - document baseline behavior verbatim
 - [ ] Identify patterns in rationalizations/failures
+- [ ] Save RED result to `docs/superpowers/skill-tests/{date}-{skill-name}/{date}-{skill-name}-red.md`
+- [ ] Copy any files generated during testing into the same folder
 
 **GREEN Phase - Write Minimal Skill:**
 - [ ] Name uses only letters, numbers, hyphens (no parentheses/special chars)
@@ -613,6 +665,8 @@ Deploying untested skills = deploying untested code. It's a violation of quality
 - [ ] Code inline OR link to separate file
 - [ ] One excellent example (not multi-language)
 - [ ] Run scenarios WITH skill - verify agents now comply
+- [ ] Save GREEN result to `docs/superpowers/skill-tests/{date}-{skill-name}/{date}-{skill-name}-green.md`
+- [ ] Copy any files generated during testing into the same folder
 
 **REFACTOR Phase - Close Loopholes:**
 - [ ] Identify NEW rationalizations from testing
@@ -620,6 +674,8 @@ Deploying untested skills = deploying untested code. It's a violation of quality
 - [ ] Build rationalization table from all test iterations
 - [ ] Create red flags list
 - [ ] Re-test until bulletproof
+- [ ] Save REFACTOR result to `docs/superpowers/skill-tests/{date}-{skill-name}/{date}-{skill-name}-refactor.md`
+- [ ] Copy any files generated during testing into the same folder
 
 **Quality Checks:**
 - [ ] Small flowchart only if decision non-obvious
