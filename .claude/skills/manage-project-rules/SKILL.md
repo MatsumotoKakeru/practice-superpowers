@@ -27,11 +27,16 @@ WHEN called from another skill (receiving-code-review, brainstorming, etc.):
 
 ```
 1. READ docs/rules/project-rules.md (if exists)
-2. DUPLICATE CHECK: search for similar existing rules (keyword match)
+2. DUPLICATE CHECK: Grep the file for keywords from the new rule content
 3. CLASSIFY into one of the 5 categories below
-4. APPEND to the appropriate section
+4. SECTION CHECK: Grep the file for the target ## heading
+   (e.g., grep "## 設計決定事項" to check if the section exists)
+5. APPEND:
    IF file doesn't exist: CREATE with full structure
-5. CONFIRM: show what was added
+   IF section heading not found in file: add ## heading + bullet
+   IF section heading found: add new bullet WITHIN the existing section
+     — do NOT add a new ## heading
+6. CONFIRM: show what was added
 ```
 
 ## Categories
@@ -81,3 +86,4 @@ Before appending, Grep for keywords from the new rule. If a similar rule exists:
 | Skipping duplicate check | Always read the file first |
 | Asking user when called from skill | Trust the content passed by the calling skill |
 | Missing the "why" for design decisions | Design decisions must include reason |
+| Adding new `## heading` when section exists | Append within existing section — never duplicate a heading |
