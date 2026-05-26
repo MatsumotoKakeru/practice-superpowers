@@ -22,6 +22,7 @@ WHEN receiving code review feedback:
 4. EVALUATE: Technically sound for THIS codebase?
 5. RESPOND: Technical acknowledgment or reasoned pushback
 6. IMPLEMENT: One item at a time, test each
+7. RECORD: Call manage-project-rules to capture review learnings
 ```
 
 ## Forbidden Responses
@@ -199,6 +200,31 @@ your human partner: "Fix items 1-6"
 You understand 1,2,3,6. Unclear on 4,5.
 ✅ "Understand 1,2,3,6. Need clarification on 4 and 5 before implementing."
 ```
+
+## Recording Review Knowledge
+
+After completing all feedback items, call `manage-project-rules` to record what the review revealed.
+
+**What to record:**
+
+| Type | When to record | Example |
+|------|---------------|---------|
+| 指摘パターン (review patterns) | Same issue flagged repeatedly, or across reviewers | "テストなしのプロダクションコードは必ず指摘される" |
+| 設計上の決定事項 | Reviewer raises design question → decision is made | "認証はミドルウェアで一元化する（各エンドポイントで個別処理しない）" |
+| コーディング規約 | Reviewer enforces a convention not in CLAUDE.md | "エラーメッセージは日本語で統一する" |
+
+**Trigger: call manage-project-rules when:**
+```
+- Reviewer flagged the same issue type 2+ times
+- A design decision was made in response to pushback
+- Feedback revealed a gap in project conventions
+```
+
+**Skip recording when:**
+- Feedback was a one-off typo or minor wording fix
+- Issue was already covered in existing project rules
+
+**REQUIRED SUB-SKILL:** Use `manage-project-rules` for the actual recording step.
 
 ## GitHub Thread Replies
 
