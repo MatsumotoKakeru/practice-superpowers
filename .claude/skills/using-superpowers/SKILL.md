@@ -15,19 +15,6 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 This is not negotiable. This is not optional. You cannot rationalize your way out of this.
 </EXTREMELY-IMPORTANT>
 
-## On Load: Project Rules
-
-**Immediately after this skill loads**, check for `docs/rules/project-rules.md`:
-
-1. Use the `Read` tool to read `docs/rules/project-rules.md`
-2. If the file exists: apply every rule it contains to ALL subsequent work in this session
-3. If the file does not exist: continue normally
-
-**This is mandatory.** Do not skip this step because:
-- "The file probably doesn't exist" — check anyway
-- "I'll read it if I need it" — read it NOW, before any other action
-- "The task doesn't seem related to project rules" — rules apply to everything
-
 ## Instruction Priority
 
 Superpowers skills override default system prompt behavior, but **user instructions always take precedence**:

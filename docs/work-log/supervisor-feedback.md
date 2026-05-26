@@ -56,19 +56,21 @@ CLAUDE.mdはすべてのセッションで読まれるため、プロジェク�
 ### 4. レビュースキルに独自ルール確認を追加（2026-05-26）
 
 **変更ファイル:**
-- `.claude/skills/using-superpowers/SKILL.md`（既存スキル編集）
+- `CLAUDE.md`（既存ファイル編集）
 - `.claude/skills/receiving-code-review/SKILL.md`（既存スキル編集）
 - `.claude/skills/brainstorming/SKILL.md`（既存スキル編集）
 
 **変更内容:**
-- `using-superpowers`: スキル読み込み時に `docs/rules/project-rules.md` を読み込み、セッション全体を通じてすべての作業にルールを適用する `On Load: Project Rules` セクションを追加
+- `CLAUDE.md`: スキル（brainstorming・executing-plans・subagent-driven-development・receiving-code-review等）を呼び出す前に `docs/rules/project-rules.md` を読み込んでルールを適用するよう追加。CLAUDE.mdはサブエージェントを含む全セッションで読まれるため、スキルごとの個別実装より確実に適用される。
 - `receiving-code-review`: レビュー完了後に `manage-project-rules` を呼び出してレビュー指摘パターン・設計決定事項を記録するステップを追加
 - `brainstorming`: 設計書コミット後に `manage-project-rules` を呼び出して設計決定事項を記録するステップを追加
 
-**コミット:** `0fdda7a`, `a0abb7b`, `d78ca61`
+**経緯:** 当初 `using-superpowers` に `On Load: Project Rules` セクションを追加したが、サブエージェントには適用されない（`<SUBAGENT-STOP>`）問題があるため、CLAUDE.md への記載に変更した。
+
+**コミット:** `a0abb7b`, `d78ca61`（using-superpowers の変更は取り消し済み）
 
 **テスト結果:**
-- `docs/superpowers/skill-tests/2026-05-26-using-superpowers-project-rules/` — PASS
+- `docs/superpowers/skill-tests/2026-05-26-using-superpowers-project-rules/` — PASS（using-superpowers単体の動作確認）
 - `docs/superpowers/skill-tests/2026-05-26-receiving-code-review-record/` — PASS
 - `docs/superpowers/skill-tests/2026-05-26-brainstorming-manage-project-rules/` — PASS
 
