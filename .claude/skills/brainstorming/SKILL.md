@@ -27,9 +27,10 @@ You MUST create a task for each of these items and complete them in order:
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+7. **Record design decisions** — invoke manage-project-rules skill to record decisions made during design
+8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+9. **User reviews written spec** — ask user to review the spec file before proceeding
+10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -56,14 +57,15 @@ digraph brainstorming {
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
     "User approves design?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Spec self-review\n(fix inline)";
+    "Write design doc" -> "Invoke manage-project-rules\n(record design decisions)";
+    "Invoke manage-project-rules\n(record design decisions)" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
     "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
 }
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The two skills invoked after brainstorming are: (1) manage-project-rules to record design decisions, then (2) writing-plans to create the implementation plan.
 
 ## The Process
 
@@ -154,6 +156,9 @@ UIの画面を含む機能を設計する場合、設計書には画面ごとに
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
 
+**Record Design Decisions:**
+After committing, invoke the `manage-project-rules` skill to record the key decisions made during brainstorming (architecture choices, constraints, rejected alternatives, and rationale). This ensures design decisions are persisted in `docs/rules/project-rules.md` and available to future sessions.
+
 **Spec Self-Review:**
 After writing the spec document, look at it with fresh eyes:
 
@@ -174,7 +179,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 **Implementation:**
 
 - Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
+- First invoke manage-project-rules (step 7), then invoke writing-plans. Do NOT invoke any other skill.
 
 ## Key Principles
 
