@@ -18,12 +18,25 @@ function extractText(content) {
     .trim();
 }
 
-function shouldSkip(text) {
-  if (!text || !text.trim()) return true;
-  if (text.includes('<local-command-caveat>')) return true;
-  if (text.includes('<command-name>')) return true;
-  if (text.includes('<command-message>')) return true;
-  return false;
+function extractLocalCommand(text) {
+  const nameMatch = text.match(/<command-name>\/?([^\n<]*)<\/command-name>/);
+  const argsMatch = text.match(/<command-args>([^<]*)<\/command-args>/);
+  if (nameMatch) {
+    const name = nameMatch[1].trim();
+    const args = argsMatch ? argsMatch[1].trim() : '';
+    return args ? `/${name} ${args}` : `/${name}`;
+  }
+  const msgMatch = text.match(/<command-message>([^<]*)<\/command-message>/);
+  if (msgMatch) return `/${msgMatch[1].trim()}`;
+  return null;
+}
+
+function processText(text) {
+  if (!text || !text.trim()) return null;
+  if (text.includes('<command-name>') || text.includes('<command-message>')) {
+    return extractLocalCommand(text);
+  }
+  return text.trim() || null;
 }
 
 let stdinData = '';
@@ -63,8 +76,9 @@ function main() {
     const msg = entry.message;
     if (!msg || !msg.role) continue;
 
-    const text = extractText(msg.content);
-    if (shouldSkip(text)) continue;
+    const rawText = extractText(msg.content);
+    const text = processText(rawText);
+    if (!text) continue;
 
     messages.push({ role: msg.role, text });
   }
