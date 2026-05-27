@@ -11,6 +11,8 @@ Code review requires technical evaluation, not emotional performance.
 
 **Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
 
+**REQUIRED SUB-SKILL:** このスキルを開始する前に必ず `superpowers:load-project-rules` を呼び出すこと。
+
 ## The Response Pattern
 
 ```

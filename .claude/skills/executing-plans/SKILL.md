@@ -13,6 +13,8 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
 
+**REQUIRED SUB-SKILL:** このスキルを開始する前に必ず `superpowers:load-project-rules` を呼び出すこと。
+
 ## The Process
 
 ### Step 1: Load and Review Plan

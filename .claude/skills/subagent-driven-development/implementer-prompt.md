@@ -16,6 +16,10 @@ Task tool (general-purpose):
 
     [Scene-setting: where this fits, dependencies, architectural context]
 
+    ## プロジェクトルールの適用
+
+    作業を開始する前に `docs/rules/project-rules.md` を Read ツールで読み込み、記載されているルールをこの作業全体に適用すること。ファイルが存在しない場合は通常通り進める。
+
     ## Before You Begin
 
     If you have questions about:
@@ -30,7 +34,7 @@ Task tool (general-purpose):
 
     Once you're clear on requirements:
     1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
+    2. Write tests using TDD (test first, then implementation)
     3. Verify implementation works
     4. Commit your work
     5. Self-review (see below)
@@ -92,7 +96,7 @@ Task tool (general-purpose):
 
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
-    - Did I follow TDD if required?
+    - Did I follow TDD (test first, then implementation)?
     - Are tests comprehensive?
 
     If you find issues during self-review, fix them now before reporting.

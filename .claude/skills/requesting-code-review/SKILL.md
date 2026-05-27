@@ -9,6 +9,8 @@ Dispatch a code reviewer subagent to catch issues before they cascade. The revie
 
 **Core principle:** Review early, review often.
 
+**REQUIRED SUB-SKILL:** このスキルを開始する前に必ず `superpowers:load-project-rules` を呼び出すこと。
+
 ## When to Request Review
 
 **Mandatory:**

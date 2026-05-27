@@ -11,6 +11,7 @@
 | 4 | レビュースキルに独自ルール確認を追加 | 既存スキル編集 | ✅ 完了 |
 | 5 | 人間レビュー後の設計書更新フローをスキル化 | 新規スキル作成 | ✅ 完了 |
 | 6 | 開発チャットを人間が見やすい形で保存する仕組み | 新規スキル作成 | ✅ 完了 |
+| 7 | TDDルール適用をCLAUDE.mdからスキルへ移行 | 新規スキル作成・既存スキル編集 | ✅ 完了 |
 
 ---
 
@@ -101,4 +102,34 @@ CLAUDE.mdはすべてのセッションで読まれるため、プロジェク�
 **変更内容:** 開発セッションのチャットログを整形して`docs/chat-logs/`に保存するスキルを作成。
 
 **コミット:** `e274579 feat: save-chat-logスキルを追加`
+
+---
+
+### 7. TDDルール適用をCLAUDE.mdからスキルへ移行（2026-05-27）
+
+**変更ファイル:**
+- `.claude/skills/load-project-rules/SKILL.md`（新規作成）
+- `.claude/skills/brainstorming/SKILL.md`（既存スキル編集）
+- `.claude/skills/executing-plans/SKILL.md`（既存スキル編集）
+- `.claude/skills/subagent-driven-development/SKILL.md`（既存スキル編集）
+- `.claude/skills/dispatching-parallel-agents/SKILL.md`（既存スキル編集）
+- `.claude/skills/receiving-code-review/SKILL.md`（既存スキル編集）
+- `.claude/skills/requesting-code-review/SKILL.md`（既存スキル編集）
+- `.claude/skills/update-spec-after-review/SKILL.md`（既存スキル編集）
+- `.claude/skills/subagent-driven-development/implementer-prompt.md`（既存ファイル編集）
+- `CLAUDE.md`（既存ファイル編集）
+
+**変更内容:**
+
+**背景:** CLAUDE.md でTDDを強制する方式は「CLAUDE.mdが読まれる保証」に依存しており、スキルへの責務分離ができていなかった。
+
+**新アーキテクチャ:**
+- `docs/rules/project-rules.md` — プロジェクトルールの単一の正規ファイル（TDDルールはここに記載し `test-driven-development` スキルへ参照）
+- `load-project-rules` スキル — 上記ファイルを Read して内容を適用し、`REQUIRED SKILL:` 参照があればそのスキルを呼び出す
+- 各実装スキル — 先頭で `REQUIRED SUB-SKILL: load-project-rules` を呼び出す
+- `implementer-prompt.md` — サブエージェントはスキルを呼べないため、プロンプトに直接 `docs/rules/project-rules.md` を Read して適用する指示を追加。あわせて TDD を条件付きから無条件化
+
+**CLAUDE.md:** TDDセクションを削除し、`load-project-rules` の仕組みへの簡潔な説明に変更
+
+**テスト結果:** `docs/superpowers/skill-tests/2026-05-27-load-project-rules/` — RED→GREEN PASS
 

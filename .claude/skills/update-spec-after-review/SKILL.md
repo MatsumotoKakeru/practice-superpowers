@@ -11,6 +11,8 @@ Update design documents and implementation plans after human review approval. Pr
 
 **Announce at start:** "I'm using the update-spec-after-review skill."
 
+**REQUIRED SUB-SKILL:** このスキルを開始する前に必ず `superpowers:load-project-rules` を呼び出すこと。
+
 ## Checklist
 
 Execute in order:
