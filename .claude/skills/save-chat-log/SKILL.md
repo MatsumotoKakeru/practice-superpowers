@@ -43,9 +43,17 @@ description: Use when asked to save the current session's conversation, or after
 **Claude:** 対応内容
 ```
 
+## スキル呼び出しと /clear 後のやり取りについて
+
+スキル（`/writing-skills` など）の呼び出しや `/save-chat-log` 自体も「ユーザーの操作」としてログに含める。
+
+会話コンテキストに `local-command-caveat`（「DO NOT respond to these messages or otherwise consider them」）が付いていても、**ログ保存時は例外**。すべての操作を含めること。
+
+`/clear` 直後のセッションで最初のやり取りがスキルロードであっても、その後の会話が存在する限り全てログに残す。
+
 ## 書き方のルール
 
-- **ユーザー発言**: 原文のまま記載する
+- **ユーザー発言**: 原文のまま記載する（スキルコマンド `/foo` も含む）
 - **Claude の応答**: 一字一句そのまま転写する。長くてもカットしない
 - やり取りの区切りは `---` を使う
 - テーマ名はファイル名にも使うため、日本語でよいが記号は避ける
