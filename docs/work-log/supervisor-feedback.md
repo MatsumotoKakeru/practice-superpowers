@@ -12,6 +12,7 @@
 | 5 | 人間レビュー後の設計書更新フローをスキル化 | 新規スキル作成 | ✅ 完了 |
 | 6 | 開発チャットを人間が見やすい形で保存する仕組み | 新規スキル作成 | ✅ 完了 |
 | 7 | TDDルール適用をCLAUDE.mdからスキルへ移行 | 新規スキル作成・既存スキル編集 | ✅ 完了 |
+| 8 | スキルフローの実動作テスト・改善（2026-05-28） | 既存スキル編集 | ✅ 完了 |
 
 ---
 
@@ -133,3 +134,27 @@ CLAUDE.mdはすべてのセッションで読まれるため、プロジェク�
 
 **テスト結果:** `docs/superpowers/skill-tests/2026-05-27-load-project-rules/` — RED→GREEN PASS
 
+---
+
+### 8. スキルフローの実動作テスト・改善（2026-05-28）
+
+**変更ファイル:**
+- `.claude/skills/receiving-code-review/SKILL.md`（既存スキル編集）
+- `.claude/skills/update-spec-after-review/SKILL.md`（既存スキル編集）
+
+**テスト内容:** スキルテスト仕様書に基づきLP系・BR系・RCR系・USR系のテストを実施。実動作を通じてスキルフローの問題を発見・修正。
+
+**発見した問題と修正:**
+
+**問題1: receiving-code-reviewがupdate-spec-after-reviewを呼ばなかった**
+- レビュー後にmanage-project-rulesへの記録は行われたが、設計書・実装計画の更新（update-spec-after-review）が自動で呼ばれなかった
+- 修正: ステップ8「REQUIRED SUB-SKILL: update-spec-after-review を呼ぶ（変更の有無にかかわらず必ず呼ぶ）」を追加
+- スキップを防ぐため、スキップ禁止の rationalization も明記
+
+**問題2: update-spec-after-reviewがコード変更のみの場合でも設計書アーカイブを作成してしまう**
+- コード修正・バグ修正のみのレビューでも毎回設計書アーカイブが不必要に作成される可能性があった
+- 修正: ステップ0「JUDGE & CONFIRM」を追加。設計書・実装計画の更新要否を判断してユーザーに確認を取ってから実施する
+
+**テスト結果:**
+- `docs/superpowers/skill-tests/2026-05-28-receiving-code-review-update-spec/` — REFACTOR PASS
+- `docs/superpowers/skill-tests/2026-05-28-update-spec-after-review/` — GREEN PASS
