@@ -8,6 +8,7 @@ export function useSnippets(page = 1) {
 
   const load = useCallback(async () => {
     setLoading(true)
+    setData(null)
     setError(null)
     try {
       const result = await getSnippets(page)

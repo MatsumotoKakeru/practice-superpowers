@@ -1,8 +1,15 @@
 # プロジェクトルール
+- **出力される設定ファイルは日本語で
 
 ## コーディングルール
 
 REQUIRED SKILL: test-driven-development
+
+- **dangerouslySetInnerHTML のサニタイズ**: `dangerouslySetInnerHTML` を使う場合は必ず `DOMPurify.sanitize()` でサニタイズする（理由: XSS脆弱性。認証なし環境では誰でもコンテンツを作成できるためリスクが高い）
+- **Promise を返す関数の await**: `refetch()` 等 Promise を返す関数は必ず `await` すること（理由: await なしだとレースコンディションが発生し、古いデータが表示される場合がある）
+- **DRF ページネーション URL のパース**: 前後ページ遷移には `new URL(data.next!).searchParams.get('page')` でパースする（理由: 算術演算では検索・フィルタ等のクエリパラメータが追加された場合に壊れる）
+- **データ取得フックの data リセット**: ページ/ID が変わる際は新規 fetch の前に `setData(null)` でリセットする（理由: 旧ページのデータがローディング中に表示されるのを防ぐ）
+- **メモ化の徹底**: `React.memo`・`useCallback`・`useMemo` でメモ化できる箇所は基本的にすべて適用し、不要な再レンダリングを防ぐ（理由: パフォーマンスとUX品質の維持）。手順: ① props でコールバックまたはオブジェクトを受け取るコンポーネントを全列挙 → ② `memo` 対象を確定 → ③ その呼び出し元で `useCallback`/`useMemo` を適用
 
 ## 設計決定事項
 - **Next.js App Router**: このプロジェクトはNext.js App Routerを使用する（理由: SSR対応とルーティングの簡潔さ）
@@ -12,3 +19,4 @@ REQUIRED SKILL: test-driven-development
 - **カスタムフック構成**: useSnippets（一覧取得）, useSnippet（詳細取得）, useCreateSnippet（作成）, useUpdateSnippet（更新）, useDeleteSnippet（削除）の5フックに分離する（理由: 操作ごとに責務を明確に分けるため）
 - **コードフィールドの文字制限**: バックエンドは TextField で制限なしだが、フロントエンド側で2,000文字上限を設ける（理由: UI上の実用性のため）
 - **タイトルフィールド**: バックエンド仕様に従い任意（blank=True）、最大100文字
+- **要件定義でのUI画面モック**: 設計フェーズでTailwindを使ったモック画面を要件定義に含め、機能だけでなく操作可能な画面デザインを実装前に合意する（理由: 機能が完成してもユーザーが操作しにくい画面になるリスクがある）

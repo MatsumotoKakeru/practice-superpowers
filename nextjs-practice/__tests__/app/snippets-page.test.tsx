@@ -98,6 +98,17 @@ describe('SnippetsPage', () => {
     expect(screen.getByRole('button', { name: '前へ' })).toBeDefined()
   })
 
+  it('DRFがpageパラメータを省略したprevious URLでも「前へ」ボタンが /snippets?page=1 に遷移する', async () => {
+    const user = userEvent.setup()
+    mockUseSnippets.mockReturnValue({
+      data: { count: 20, next: null, previous: 'http://localhost:8000/snippets/', results: [] },
+      loading: false, error: null, refetch: vi.fn(),
+    })
+    render(<SnippetsPage />)
+    await user.click(screen.getByRole('button', { name: '前へ' }))
+    expect(mockPush).toHaveBeenCalledWith('/snippets?page=1')
+  })
+
   it('削除成功後に refetch を呼ぶ', async () => {
     const user = userEvent.setup()
     const refetch = vi.fn()

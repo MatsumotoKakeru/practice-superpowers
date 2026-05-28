@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { LANGUAGE_CHOICES, STYLE_CHOICES } from '@/lib/constants'
 
 export interface SnippetFormData {
@@ -25,7 +25,7 @@ const DEFAULT_DATA: SnippetFormData = {
   linenos: false,
 }
 
-export function SnippetForm({ initialData, onSubmit, onCancel, submitLabel = '保存' }: SnippetFormProps) {
+export const SnippetForm = memo(function SnippetForm({ initialData, onSubmit, onCancel, submitLabel = '保存' }: SnippetFormProps) {
   const [formData, setFormData] = useState<SnippetFormData>(initialData ?? DEFAULT_DATA)
   const [errors, setErrors] = useState<{ code?: string; title?: string }>({})
   const [loading, setLoading] = useState(false)
@@ -67,65 +67,96 @@ export function SnippetForm({ initialData, onSubmit, onCancel, submitLabel = '�
     onCancel()
   }
 
+  const labelClass = 'block text-sm font-medium text-gray-700 mb-1'
+  const inputClass = 'block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+  const errorClass = 'mt-1 text-xs text-red-600'
+
   return (
-    <form onSubmit={handleSubmit}>
-      {serverError && <p role="alert">{serverError}</p>}
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {serverError && (
+        <p role="alert" className="p-3 bg-red-50 text-red-700 rounded-lg border border-red-200 text-sm">
+          {serverError}
+        </p>
+      )}
       <div>
-        <label htmlFor="title">タイトル</label>
+        <label htmlFor="title" className={labelClass}>タイトル</label>
         <input
           id="title"
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          className={inputClass}
+          placeholder="例: Python ソート関数"
         />
-        {errors.title && <p>{errors.title}</p>}
+        {errors.title && <p className={errorClass}>{errors.title}</p>}
       </div>
       <div>
-        <label htmlFor="code">コード</label>
+        <label htmlFor="code" className={labelClass}>コード</label>
         <textarea
           id="code"
           value={formData.code}
           onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+          className={`${inputClass} font-mono min-h-40 resize-y`}
+          placeholder="コードを入力..."
         />
-        {errors.code && <p>{errors.code}</p>}
+        {errors.code && <p className={errorClass}>{errors.code}</p>}
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="language" className={labelClass}>言語</label>
+          <select
+            id="language"
+            value={formData.language}
+            onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+            className={inputClass}
+          >
+            {LANGUAGE_CHOICES.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="style" className={labelClass}>スタイル</label>
+          <select
+            id="style"
+            value={formData.style}
+            onChange={(e) => setFormData({ ...formData, style: e.target.value })}
+            className={inputClass}
+          >
+            {STYLE_CHOICES.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div>
-        <label htmlFor="language">言語</label>
-        <select
-          id="language"
-          value={formData.language}
-          onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-        >
-          {LANGUAGE_CHOICES.map((c) => (
-            <option key={c.value} value={c.value}>{c.label}</option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label htmlFor="style">スタイル</label>
-        <select
-          id="style"
-          value={formData.style}
-          onChange={(e) => setFormData({ ...formData, style: e.target.value })}
-        >
-          {STYLE_CHOICES.map((c) => (
-            <option key={c.value} value={c.value}>{c.label}</option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>
+        <label className="flex items-center gap-2 cursor-pointer select-none">
           <input
             type="checkbox"
             aria-label="行番号表示"
             checked={formData.linenos}
             onChange={(e) => setFormData({ ...formData, linenos: e.target.checked })}
+            className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
-          行番号表示
+          <span className="text-sm text-gray-700">行番号表示</span>
         </label>
       </div>
-      <button type="submit" disabled={loading}>{submitLabel}</button>
-      <button type="button" onClick={handleCancel}>キャンセル</button>
+      <div className="flex gap-3 pt-2">
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+        >
+          {submitLabel}
+        </button>
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="text-sm text-gray-600 hover:text-gray-800 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          キャンセル
+        </button>
+      </div>
     </form>
   )
-}
+})
