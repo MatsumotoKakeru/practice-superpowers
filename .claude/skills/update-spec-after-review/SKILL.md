@@ -18,6 +18,13 @@ Update design documents and implementation plans after human review approval. Pr
 Execute in order:
 
 ```
+0. JUDGE & CONFIRM: 今回のレビューフィードバックを確認し、何を更新すべきか判断してユーザーに確認する
+   判断後、以下をユーザーに提示して確認を取る：
+   「今回のレビュー内容を確認しました。
+   - 設計書の更新: 必要 / 不要
+   - 実装計画の更新: 必要 / 不要
+   上記の判断で進めますか？」
+   ユーザーが承認した内容のみ実施する。不要と判断した項目はスキップする。
 1. READ docs/rules/project-rules.md
 2. CONFIRM the review feedback with the user
 3. UPDATE the design document
