@@ -13,7 +13,9 @@ REQUIRED SKILL: test-driven-development
 
 ## 設計決定事項
 - **Next.js App Router**: このプロジェクトはNext.js App Routerを使用する（理由: SSR対応とルーティングの簡潔さ）
-- **スニペット管理UI構成**: シンプルなページ遷移型。全CRUD画面を独立したページで実装する（/snippets, /snippets/new, /snippets/[id], /snippets/[id]/edit）（理由: TDD しやすく Next.js App Router に素直な設計）
+- **スニペット管理UI構成**: シンプルなページ遷移型。詳細画面は設けず3画面で実装する（/snippets, /snippets/new, /snippets/[id]/edit）（理由: TDD しやすく Next.js App Router に素直な設計。詳細画面は閲覧専用で付加価値が薄いため廃止）
+- **削除ボタンの配置**: 削除ボタンは編集画面（/snippets/[id]/edit）にのみ配置する。一覧画面のカードには置かない（理由: 一覧からの誤削除を防ぎ、削除操作には明示的な画面遷移を経させる）
+- **一覧カードのコードプレビュー**: SnippetCard に code フィールドの先頭3行をプレビュー表示する（理由: スニペットの内容を一覧で把握できるUX改善）
 - **バックエンドAPI呼び出し**: クライアントサイドから直接 fetch する（Next.js API Routes 経由のプロキシなし）（理由: シンプルさを優先）
 - **認証**: スニペット管理UIは認証なし、全スニペットを誰でも操作可能（理由: 練習プロジェクトのため省略）
 - **カスタムフック構成**: useSnippets（一覧取得）, useSnippet（詳細取得）, useCreateSnippet（作成）, useUpdateSnippet（更新）, useDeleteSnippet（削除）の5フックに分離する（理由: 操作ごとに責務を明確に分けるため）

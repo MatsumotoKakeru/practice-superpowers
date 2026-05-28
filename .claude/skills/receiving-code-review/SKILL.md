@@ -24,8 +24,8 @@ WHEN receiving code review feedback:
 4. EVALUATE: Technically sound for THIS codebase?
 5. RESPOND: Technical acknowledgment or reasoned pushback
 6. IMPLEMENT: One item at a time, test each
-7. UPDATE SPECS: If design changes were approved, call update-spec-after-review
-8. RECORD: Call manage-project-rules to capture review learnings
+7. RECORD: Call manage-project-rules to capture review learnings
+8. REQUIRED SUB-SKILL: `update-spec-after-review` を呼ぶ（変更の有無にかかわらず必ず呼ぶ）
 ```
 
 ## Forbidden Responses
@@ -229,44 +229,7 @@ After completing all feedback items, call `manage-project-rules` to record what 
 
 **REQUIRED SUB-SKILL:** Use `manage-project-rules` for the actual recording step.
 
-## Updating Design Documents After Review
-
-Call `update-spec-after-review` when all of the following are true:
-- All review feedback has been implemented
-- The review resulted in design-level changes (not just code fixes)
-- The human partner has approved those changes
-
-```
-IF review changed how a feature behaves (error handling, success flow, validation rules, UI behavior):
-  AND human partner approved the change:
-  THEN call update-spec-after-review
-
-IF review only fixed bugs / typos / code style / internal refactoring:
-  SKIP update-spec-after-review
-```
-
-**Design changes that require spec update:**
-- Changed UI behavior (error handling, success flow, validation rules, screen transitions)
-- Changed data flow between components or services
-- Added or removed user-facing features
-- Changed API contract or data model
-- Modified architectural decisions (routing, auth, state management)
-- Added or modified process rules / operational rules (review processes, workflows, conventions)
-
-**Changes that do NOT need spec update:**
-- Code style fixes (formatting, naming)
-- Bug fixes that restore intended behavior
-- Internal refactoring with no behavior change
-- Test additions
-
-**NEVER skip for these reasons:**
-| Excuse | Reality |
-|--------|---------|
-| 「manage-project-rules に記録したから不要」 | 記録と設計書更新は別。記録したからといって設計書が更新されたわけではない |
-| 「ユーザーから指示がなかった」 | 設計変更を伴うレビューの場合、自分で判断して呼ぶこと |
-| 「コードレビューなので設計書は関係ない」 | 設計変更を伴うレビューは対象。コードだけの変更かどうかを確認すること |
-
-**REQUIRED SUB-SKILL:** Use `update-spec-after-review` for the actual update.
+**REQUIRED NEXT STEP:** manage-project-rules を呼んだ後、必ず `update-spec-after-review` を呼ぶ（ステップ8）。コード変更のみであっても省略不可。
 
 ## GitHub Thread Replies
 
