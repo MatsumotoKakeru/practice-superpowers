@@ -1,26 +1,14 @@
 'use client'
-import { useCallback } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useSnippets } from '@/hooks/useSnippets'
-import { useDeleteSnippet } from '@/hooks/useDeleteSnippet'
 import { SnippetCard } from '@/components/snippets/SnippetCard'
 
 export default function SnippetsPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const page = Number(searchParams.get('page') ?? '1')
-  const { data, loading, error, refetch } = useSnippets(page)
-  const { remove, error: deleteError } = useDeleteSnippet()
-
-  const handleDelete = useCallback(async (id: number) => {
-    try {
-      await remove(id)
-      await refetch()
-    } catch {
-      // error は deleteError に反映済み
-    }
-  }, [remove, refetch])
+  const { data, loading, error } = useSnippets(page)
 
   if (loading) return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -44,17 +32,12 @@ export default function SnippetsPage() {
           新規作成
         </Link>
       </div>
-      {deleteError && (
-        <p role="alert" className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg border border-red-200">
-          {deleteError.message}
-        </p>
-      )}
       {data?.results.length === 0 && (
         <p className="text-gray-500 text-center py-12">スニペットがありません</p>
       )}
       <div className="space-y-2">
         {data?.results.map((snippet) => (
-          <SnippetCard key={snippet.id} snippet={snippet} onDelete={handleDelete} />
+          <SnippetCard key={snippet.id} snippet={snippet} />
         ))}
       </div>
       <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">

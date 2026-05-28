@@ -12,18 +12,24 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/hooks/useSnippet', () => ({ useSnippet: vi.fn() }))
 vi.mock('@/hooks/useUpdateSnippet', () => ({ useUpdateSnippet: vi.fn() }))
+vi.mock('@/hooks/useDeleteSnippet', () => ({ useDeleteSnippet: vi.fn() }))
 
 import { useSnippet } from '@/hooks/useSnippet'
 import { useUpdateSnippet } from '@/hooks/useUpdateSnippet'
+import { useDeleteSnippet } from '@/hooks/useDeleteSnippet'
 
 const mockUseSnippet = vi.mocked(useSnippet)
 const mockUseUpdateSnippet = vi.mocked(useUpdateSnippet)
+const mockUseDeleteSnippet = vi.mocked(useDeleteSnippet)
 const mockUpdate = vi.fn()
+const mockRemove = vi.fn()
 
 beforeEach(() => {
   mockPush.mockReset()
   mockUpdate.mockReset()
+  mockRemove.mockReset()
   mockUseUpdateSnippet.mockReturnValue({ update: mockUpdate, loading: false, error: null })
+  mockUseDeleteSnippet.mockReturnValue({ remove: mockRemove, loading: false, error: null })
 })
 
 const mockSnippet = {
@@ -50,20 +56,37 @@ describe('EditSnippetPage', () => {
     expect((screen.getByLabelText('コード') as HTMLTextAreaElement).value).toBe('x=0')
   })
 
-  it('保存成功後に /snippets/1 に遷移する', async () => {
+  it('保存成功後に /snippets に遷移する', async () => {
     const user = userEvent.setup()
     mockUseSnippet.mockReturnValue({ data: mockSnippet, loading: false, error: null })
     mockUpdate.mockResolvedValue({ ...mockSnippet, code: 'x=1', highlighted: '' })
     render(<EditSnippetPage />)
     await user.click(screen.getByRole('button', { name: '更新' }))
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/snippets/1'))
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/snippets'))
   })
 
-  it('キャンセルすると /snippets/1 に遷移する', async () => {
+  it('キャンセルすると /snippets に遷移する', async () => {
     const user = userEvent.setup()
     mockUseSnippet.mockReturnValue({ data: mockSnippet, loading: false, error: null })
     render(<EditSnippetPage />)
     await user.click(screen.getByRole('button', { name: 'キャンセル' }))
-    expect(mockPush).toHaveBeenCalledWith('/snippets/1')
+    expect(mockPush).toHaveBeenCalledWith('/snippets')
+  })
+
+  it('削除ボタンを表示する', () => {
+    mockUseSnippet.mockReturnValue({ data: mockSnippet, loading: false, error: null })
+    render(<EditSnippetPage />)
+    expect(screen.getByRole('button', { name: '削除' })).toBeDefined()
+  })
+
+  it('削除ボタンを押すと確認ダイアログが出て、確認後に /snippets に遷移する', async () => {
+    const user = userEvent.setup()
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockRemove.mockResolvedValue(undefined)
+    mockUseSnippet.mockReturnValue({ data: mockSnippet, loading: false, error: null })
+    render(<EditSnippetPage />)
+    await user.click(screen.getByRole('button', { name: '削除' }))
+    expect(window.confirm).toHaveBeenCalled()
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/snippets'))
   })
 })

@@ -7,23 +7,18 @@ interface SnippetCardProps {
     id: number
     title: string
     language: string
+    code: string
   }
-  onDelete: (id: number) => void
 }
 
-export const SnippetCard = memo(function SnippetCard({ snippet, onDelete }: SnippetCardProps) {
-  const handleDelete = () => {
-    const displayName = snippet.title || 'このスニペット'
-    if (window.confirm(`「${displayName}」を削除しますか？`)) {
-      onDelete(snippet.id)
-    }
-  }
+export const SnippetCard = memo(function SnippetCard({ snippet }: SnippetCardProps) {
+  const codePreview = snippet.code.split('\n').slice(0, 3).join('\n')
 
   return (
-    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-      <div className="flex items-center gap-3 min-w-0">
+    <div className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+      <div className="flex items-center gap-3 min-w-0 mb-2">
         <Link
-          href={`/snippets/${snippet.id}`}
+          href={`/snippets/${snippet.id}/edit`}
           className="text-indigo-600 hover:underline font-medium truncate"
         >
           {snippet.title || '(タイトルなし)'}
@@ -32,12 +27,9 @@ export const SnippetCard = memo(function SnippetCard({ snippet, onDelete }: Snip
           {snippet.language}
         </span>
       </div>
-      <button
-        onClick={handleDelete}
-        className="shrink-0 ml-4 text-sm text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded transition-colors"
-      >
-        削除
-      </button>
+      <pre className="text-xs font-mono text-gray-500 bg-gray-50 rounded p-2 overflow-hidden">
+        {codePreview}
+      </pre>
     </div>
   )
 })

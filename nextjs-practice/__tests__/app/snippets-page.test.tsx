@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SnippetsPage from '@/app/snippets/page'
 
@@ -11,7 +11,6 @@ vi.mock('next/navigation', () => ({
 }))
 
 vi.mock('@/hooks/useSnippets', () => ({ useSnippets: vi.fn() }))
-vi.mock('@/hooks/useDeleteSnippet', () => ({ useDeleteSnippet: vi.fn() }))
 vi.mock('next/link', () => ({
   default: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>
@@ -19,16 +18,11 @@ vi.mock('next/link', () => ({
 }))
 
 import { useSnippets } from '@/hooks/useSnippets'
-import { useDeleteSnippet } from '@/hooks/useDeleteSnippet'
 
 const mockUseSnippets = vi.mocked(useSnippets)
-const mockUseDeleteSnippet = vi.mocked(useDeleteSnippet)
-const mockRemove = vi.fn()
 
 beforeEach(() => {
   mockPush.mockReset()
-  mockRemove.mockReset()
-  mockUseDeleteSnippet.mockReturnValue({ remove: mockRemove, loading: false, error: null })
 })
 
 describe('SnippetsPage', () => {
@@ -78,6 +72,18 @@ describe('SnippetsPage', () => {
     expect(screen.getByRole('link', { name: '新規作成' }).getAttribute('href')).toBe('/snippets/new')
   })
 
+  it('スニペットカードが編集ページへのリンクを持つ', () => {
+    mockUseSnippets.mockReturnValue({
+      data: {
+        count: 1, next: null, previous: null,
+        results: [{ id: 1, title: 'test', language: 'python', code: '', style: 'friendly', linenos: false, highlighted: '' }],
+      },
+      loading: false, error: null, refetch: vi.fn(),
+    })
+    render(<SnippetsPage />)
+    expect(screen.getByRole('link', { name: 'test' }).getAttribute('href')).toBe('/snippets/1/edit')
+  })
+
   it('next がある場合は「次へ」ボタンを表示し、押すと ?page=2 に遷移する', async () => {
     const user = userEvent.setup()
     mockUseSnippets.mockReturnValue({
@@ -107,22 +113,5 @@ describe('SnippetsPage', () => {
     render(<SnippetsPage />)
     await user.click(screen.getByRole('button', { name: '前へ' }))
     expect(mockPush).toHaveBeenCalledWith('/snippets?page=1')
-  })
-
-  it('削除成功後に refetch を呼ぶ', async () => {
-    const user = userEvent.setup()
-    const refetch = vi.fn()
-    mockRemove.mockResolvedValue(undefined)
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
-    mockUseSnippets.mockReturnValue({
-      data: {
-        count: 1, next: null, previous: null,
-        results: [{ id: 1, title: 'test', language: 'python', code: '', style: 'friendly', linenos: false, highlighted: '' }],
-      },
-      loading: false, error: null, refetch,
-    })
-    render(<SnippetsPage />)
-    await user.click(screen.getByRole('button', { name: '削除' }))
-    await waitFor(() => expect(refetch).toHaveBeenCalled())
   })
 })

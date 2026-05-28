@@ -2094,29 +2094,3 @@ Tests       XX passed (XX)
 git add nextjs-practice/app/snippets/[id]/edit/page.tsx nextjs-practice/__tests__/app/edit-snippet-page.test.tsx
 git commit -m "feat: add edit snippet page"
 ```
-
----
-
-## レビュー後の変更 (2026-05-28)
-
-レビューフィードバックにより以下の変更を実施済み。
-
-### 変更1: 詳細画面の廃止
-
-- `app/snippets/[id]/page.tsx` を削除
-- `__tests__/app/snippet-detail-page.test.tsx` は削除（詳細画面テストは不要）
-- Task 11 の内容は実施しない
-
-### 変更2: 一覧画面から削除ボタンを削除 / カードにコードプレビュー追加
-
-**対象ファイル:**
-- `components/snippets/SnippetCard.tsx`：タイトルリンクを `/snippets/[id]/edit` に変更、`onDelete` prop と削除ボタンを削除、コードの先頭3行プレビューを追加
-- `app/snippets/page.tsx`：`useDeleteSnippet` 利用と `handleDelete` を削除
-- `__tests__/components/SnippetCard.test.tsx`：インターフェース変更・コードプレビューテスト追加
-- `__tests__/app/snippets-page.test.tsx`：削除関連テスト削除・編集リンク確認テスト追加
-
-### 変更3: 編集画面に削除ボタンを追加 / リダイレクト先を一覧に変更
-
-**対象ファイル:**
-- `app/snippets/[id]/edit/page.tsx`：`useDeleteSnippet` 追加、保存後・キャンセル後リダイレクト先を `/snippets` に変更、削除ボタンをフォーム下部に追加
-- `__tests__/app/edit-snippet-page.test.tsx`：リダイレクト先修正・削除ボタンテスト追加
